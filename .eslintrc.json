@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "mocha": true,
+    "jest": true
+  },
+  "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
+  "plugins": ["prettier"],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "off",
+    "class-methods-use-this": "off",
+    "no-plusplus": "off"
+  }
+}
