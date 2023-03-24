@@ -34,7 +34,7 @@ npm run lint:fix
 
 ## Version
 
-1.0.0np
+1.0.0
 
 ## License
 
