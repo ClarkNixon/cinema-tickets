@@ -2,9 +2,10 @@
 import InvalidPurchaseException from "./lib/exceptions/InvalidPurchaseException";
 import InvalidPaymentException from "./lib/exceptions/InvalidPaymentException";
 import InvalidReservationException from "./lib/exceptions/InvalidReservationException";
-import Constants from "./lib/Constants";
+import Constants from "./lib/constants/Constants";
 import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService";
 import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService";
+import ExceptionMessages from "./lib/constants/ExceptionMessages";
 
 export default class TicketService {
     /**
@@ -15,22 +16,20 @@ export default class TicketService {
      */
     purchaseTickets(accountId, ticketTypeRequests) {
         if (!Number.isInteger(accountId)) {
-            throw new TypeError(
-                Constants.ExceptionMessages.InvalidAccountIdType
-            );
+            throw new TypeError(ExceptionMessages.InvalidAccountIdType);
         }
 
         if (accountId <= 0) {
             // All accounts with an id greater than zero are valid. They also have sufficient funds to pay for any number of tickets.
             throw new InvalidPurchaseException(
-                Constants.ExceptionMessages.InvalidAccountId
+                ExceptionMessages.InvalidAccountId
             );
         }
 
         if (ticketTypeRequests.length <= 0) {
             // Must have request for ticket to progress
             throw new InvalidPurchaseException(
-                Constants.ExceptionMessages.InvalidTicketTypeRequest
+                ExceptionMessages.InvalidTicketTypeRequest
             );
         }
 
@@ -60,22 +59,22 @@ export default class TicketService {
             cost += ticketCost;
 
             switch (ticketTypeName) {
-                case Constants.TicketType.ADULT: {
+                case Constants.TicketType.Adult.Name: {
                     adultTickets += ticketCount;
                     break;
                 }
-                case Constants.TicketType.CHILD: {
+                case Constants.TicketType.Child.Name: {
                     childTickets += ticketCount;
                     break;
                 }
-                case Constants.TicketType.INFANT: {
+                case Constants.TicketType.Infant.Name: {
                     infantTickets += ticketCount;
                     break;
                 }
                 default: {
                     // exception already thrown in TicketTypeRequest constructor for invalid Ticket Type
                     throw new InvalidPurchaseException(
-                        Constants.ExceptionMessages.InvalidTicketType
+                        ExceptionMessages.InvalidTicketType
                     );
                 }
             }
@@ -84,7 +83,7 @@ export default class TicketService {
         if (adultTickets === 0 && (childTickets > 0 || infantTickets > 0)) {
             // Child and Infant tickets cannot be purchased without purchasing an Adult ticket
             throw new InvalidPurchaseException(
-                Constants.ExceptionMessages.NotEnoughAdults
+                ExceptionMessages.NotEnoughAdults
             );
         }
 
@@ -94,14 +93,14 @@ export default class TicketService {
         ) {
             // Only a maximum of 20 tickets that can be purchased at a time
             throw new InvalidPurchaseException(
-                Constants.ExceptionMessages.TooManyTickets
+                ExceptionMessages.TooManyTickets
             );
         }
 
         if (infantTickets > adultTickets) {
             // Infants do not pay for a ticket and are not allocated a seat. They will be sitting on an Adult's lap.
             throw new InvalidPurchaseException(
-                Constants.ExceptionMessages.TooManyInfants
+                ExceptionMessages.TooManyInfants
             );
         }
 
@@ -111,7 +110,7 @@ export default class TicketService {
     }
 
     /**
-     * Finalise teh purchase
+     * Finalise the purchase
      * @param {Number} accountId
      * @param {Number} numberOfSeats
      * @param {Number} cost
@@ -134,7 +133,7 @@ export default class TicketService {
         if (numberOfSeats <= Constants.MinNumberOfSeats) {
             // throw exception when minimum number of seats is not reached
             throw new InvalidReservationException(
-                Constants.ExceptionMessages.MinNumberOfSeats
+                ExceptionMessages.MinNumberOfSeats
             );
         }
         try {
@@ -143,7 +142,7 @@ export default class TicketService {
         } catch (ex) {
             console.error(ex);
             throw new InvalidReservationException(
-                Constants.ExceptionMessages.SeatAllocationError
+                ExceptionMessages.SeatAllocationError
             );
         }
     }
@@ -158,7 +157,7 @@ export default class TicketService {
         if (cost <= 0) {
             // throw exception when cost is less than or equal to 0
             throw new InvalidPaymentException(
-                Constants.ExceptionMessages.MinNumberOfSeats
+                ExceptionMessages.MinNumberOfSeats
             );
         }
         try {
@@ -166,9 +165,7 @@ export default class TicketService {
             ticketPaymentService.makePayment(accountId, cost);
         } catch (ex) {
             console.error(ex);
-            throw new InvalidPaymentException(
-                Constants.ExceptionMessages.PaymentError
-            );
+            throw new InvalidPaymentException(ExceptionMessages.PaymentError);
         }
     }
 }

@@ -1,15 +1,14 @@
 import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest";
-import Constants from "../src/pairtest/lib/Constants";
+import Constants from "../src/pairtest/lib/constants/Constants";
+import ExceptionMessages from "../src/pairtest/lib/constants/ExceptionMessages";
 
 describe("TicketTypeRequest", () => {
     describe("when initialised with unknown type", () => {
         it("should throw expected type error", (done) => {
-            const ticketTypes = Object.keys(Constants.TicketType);
             const initialisation = () => new TicketTypeRequest("UNKNOWN", 1);
-            const errorText = `type must be ${ticketTypes
-                .slice(0, -1)
-                .join(", ")}, or ${ticketTypes.slice(-1)}`;
-            expect(initialisation).toThrow(new TypeError(errorText));
+            expect(initialisation).toThrow(
+                new TypeError(ExceptionMessages.TicketType)
+            );
             done();
         });
     });
@@ -17,11 +16,9 @@ describe("TicketTypeRequest", () => {
     describe("when numberOfTickets is of the wrong type", () => {
         it("should throw expected type error", (done) => {
             const initialisation = () =>
-                new TicketTypeRequest(Constants.TicketType.ADULT, "one");
+                new TicketTypeRequest(Constants.TicketType.Adult.Name, "one");
             expect(initialisation).toThrow(
-                new TypeError(
-                    Constants.ExceptionMessages.InvalidNumberOfTickets
-                )
+                new TypeError(ExceptionMessages.InvalidNumberOfTickets)
             );
             done();
         });
@@ -31,11 +28,11 @@ describe("TicketTypeRequest", () => {
         it("should throw expected type error", (done) => {
             const initialisation = () =>
                 new TicketTypeRequest(
-                    Constants.TicketType.ADULT,
+                    Constants.TicketType.Adult.Name,
                     Constants.MaxNumberOfTickets + 1
                 );
             expect(initialisation).toThrow(
-                new TypeError(Constants.ExceptionMessages.TooManyTickets)
+                new TypeError(ExceptionMessages.TooManyTickets)
             );
             done();
         });
@@ -45,8 +42,8 @@ describe("TicketTypeRequest", () => {
         describe("when type is 'ADULT'", () => {
             it("should initialize and set expected values", (done) => {
                 const numberOfTickets = 10;
-                const ticketCost = 20;
-                const ticketTypeName = Constants.TicketType.ADULT;
+                const ticketCost = Constants.TicketType.Adult.Cost;
+                const ticketTypeName = Constants.TicketType.Adult.Name;
                 const ticketRequest = new TicketTypeRequest(
                     ticketTypeName,
                     numberOfTickets
@@ -65,8 +62,8 @@ describe("TicketTypeRequest", () => {
         describe("when type is 'CHILD'", () => {
             it("should initialize and set expected values", (done) => {
                 const numberOfTickets = 10;
-                const ticketCost = 10;
-                const ticketTypeName = Constants.TicketType.CHILD;
+                const ticketCost = Constants.TicketType.Child.Cost;
+                const ticketTypeName = Constants.TicketType.Child.Name;
                 const ticketRequest = new TicketTypeRequest(
                     ticketTypeName,
                     numberOfTickets
@@ -85,8 +82,8 @@ describe("TicketTypeRequest", () => {
         describe("when type is 'INFANT'", () => {
             it("should initialize and set expected values", (done) => {
                 const numberOfTickets = 10;
-                const ticketCost = 0;
-                const ticketTypeName = Constants.TicketType.INFANT;
+                const ticketCost = Constants.TicketType.Infant.Cost;
+                const ticketTypeName = Constants.TicketType.Infant.Name;
                 const ticketRequest = new TicketTypeRequest(
                     ticketTypeName,
                     numberOfTickets

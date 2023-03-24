@@ -4,6 +4,12 @@ Working implementation of a Ticket Service.
 
 ## Scripts
 
+Install dependencies
+
+```powershell
+npm install
+```
+
 Test the solution
 
 ```powershell
@@ -16,9 +22,19 @@ Lint the solution
 npm run lint
 ```
 
+Fix linting errors
+
+```powershell
+npm run lint:fix
+```
+
 ## Authors
 
-- Clark Nixon: nixon2206@gmail.com
+-   Clark Nixon: nixon2206@gmail.com
+
+## Version
+
+1.0.0np
 
 ## License
 

@@ -1,11 +1,11 @@
-import Constants from "../Constants";
+import Constants from "../constants/Constants";
 import BaseTicketType from "./BaseTicketType";
 
 export default class AdultTicketType extends BaseTicketType {
     constructor() {
         super();
-        this.setCost(20);
-        this.setHasSeat(true);
-        this.setTicketType(Constants.TicketType.ADULT);
+        this.setCost(Constants.TicketType.Adult.Cost);
+        this.setHasSeat(Constants.TicketType.Adult.HasSeat);
+        this.setTicketType(Constants.TicketType.Adult.Name);
     }
 }

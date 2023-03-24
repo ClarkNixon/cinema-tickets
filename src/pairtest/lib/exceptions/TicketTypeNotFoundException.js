@@ -1,8 +1,8 @@
-import Constants from "../Constants";
+import ExceptionMessages from "../constants/ExceptionMessages";
 
 export default class TicketTypeNotFoundException extends Error {
     constructor() {
         super();
-        this.message = Constants.ExceptionMessages.TicketNotFound;
+        this.message = ExceptionMessages.TicketNotFound;
     }
 }

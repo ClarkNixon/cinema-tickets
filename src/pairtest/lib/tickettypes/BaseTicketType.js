@@ -1,3 +1,5 @@
+import ExceptionMessages from "../constants/ExceptionMessages";
+
 export default class BaseTicketType {
     #cost;
 
@@ -7,7 +9,7 @@ export default class BaseTicketType {
 
     constructor() {
         if (this.constructor === BaseTicketType) {
-            throw new Error("BaseTicketType class can't be instantiated.");
+            throw new Error(ExceptionMessages.BaseTicketTypeError);
         }
     }
 

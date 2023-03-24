@@ -1,9 +1,11 @@
-import Constants from "./Constants";
+import Constants from "./constants/Constants";
+import ExceptionMessages from "./constants/ExceptionMessages";
 import AdultTicketType from "./tickettypes/AdultTicketType";
 import ChildTicketType from "./tickettypes/ChildTicketType";
 import InfantTicketType from "./tickettypes/InfantTicketType";
 import TicketTypeNotFoundException from "./exceptions/TicketTypeNotFoundException";
 import InvalidTicketTypeRequestException from "./exceptions/InvalidTicketTypeRequestException";
+import Helpers from "./helpers/Helpers";
 
 export default class TicketTypeRequest {
     #type;
@@ -11,24 +13,18 @@ export default class TicketTypeRequest {
     #noOfTickets;
 
     constructor(type, noOfTickets) {
-        const ticketTypes = Object.keys(Constants.TicketType);
-        if (!ticketTypes.includes(type)) {
-            throw new TypeError(
-                `type must be ${ticketTypes
-                    .slice(0, -1)
-                    .join(", ")}, or ${ticketTypes.slice(-1)}`
-            );
+        const ticketTypeNames = Helpers.TicketNameHelper();
+        if (!ticketTypeNames.includes(type)) {
+            throw new TypeError(ExceptionMessages.TicketType);
         }
 
         if (!Number.isInteger(noOfTickets)) {
-            throw new TypeError(
-                Constants.ExceptionMessages.InvalidNumberOfTickets
-            );
+            throw new TypeError(ExceptionMessages.InvalidNumberOfTickets);
         }
 
         if (noOfTickets > Constants.MaxNumberOfTickets) {
             throw new InvalidTicketTypeRequestException(
-                Constants.ExceptionMessages.TooManyTickets
+                ExceptionMessages.TooManyTickets
             );
         }
 
@@ -72,13 +68,13 @@ export default class TicketTypeRequest {
      */
     getTicketType() {
         switch (this.#type) {
-            case Constants.TicketType.ADULT: {
+            case Constants.TicketType.Adult.Name: {
                 return new AdultTicketType();
             }
-            case Constants.TicketType.CHILD: {
+            case Constants.TicketType.Child.Name: {
                 return new ChildTicketType();
             }
-            case Constants.TicketType.INFANT: {
+            case Constants.TicketType.Infant.Name: {
                 return new InfantTicketType();
             }
             default: {

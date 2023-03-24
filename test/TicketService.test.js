@@ -1,11 +1,10 @@
 import TicketService from "../src/pairtest/TicketService";
 import InvalidPurchaseException from "../src/pairtest/lib/exceptions/InvalidPurchaseException";
-import Constants from "../src/pairtest/lib/Constants";
+import Constants from "../src/pairtest/lib/constants/Constants";
+import ExceptionMessages from "../src/pairtest/lib/constants/ExceptionMessages";
 import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest";
 import SeatReservationService from "../src/thirdparty/seatbooking/SeatReservationService";
 import TicketPaymentService from "../src/thirdparty/paymentgateway/TicketPaymentService";
-import AdultTicketType from "../src/pairtest/lib/tickettypes/AdultTicketType";
-import ChildTicketType from "../src/pairtest/lib/tickettypes/ChildTicketType";
 
 jest.mock("../src/thirdparty/seatbooking/SeatReservationService");
 jest.mock("../src/thirdparty/paymentgateway/TicketPaymentService");
@@ -25,7 +24,7 @@ describe("TicketService", () => {
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(incorrectAccountId, request);
             expect(ticketPurchase).toThrow(
-                new TypeError(Constants.ExceptionMessages.InvalidAccountIdType)
+                new TypeError(ExceptionMessages.InvalidAccountIdType)
             );
             done();
         });
@@ -38,9 +37,7 @@ describe("TicketService", () => {
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(incorrectAccountId, request);
             expect(ticketPurchase).toThrow(
-                new InvalidPurchaseException(
-                    Constants.ExceptionMessages.InvalidAccountId
-                )
+                new InvalidPurchaseException(ExceptionMessages.InvalidAccountId)
             );
             done();
         });
@@ -53,7 +50,7 @@ describe("TicketService", () => {
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
                 new InvalidPurchaseException(
-                    Constants.ExceptionMessages.InvalidTicketTypeRequest
+                    ExceptionMessages.InvalidTicketTypeRequest
                 )
             );
             done();
@@ -63,15 +60,13 @@ describe("TicketService", () => {
     describe("when more tickets are requested than allowed", () => {
         it("should throw purchase exception", (done) => {
             const request = [
-                new TicketTypeRequest(Constants.TicketType.ADULT, 19),
-                new TicketTypeRequest(Constants.TicketType.CHILD, 2),
+                new TicketTypeRequest(Constants.TicketType.Adult.Name, 19),
+                new TicketTypeRequest(Constants.TicketType.Child.Name, 2),
             ];
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
-                new InvalidPurchaseException(
-                    Constants.ExceptionMessages.TooManyTickets
-                )
+                new InvalidPurchaseException(ExceptionMessages.TooManyTickets)
             );
             done();
         });
@@ -80,14 +75,12 @@ describe("TicketService", () => {
     describe("when 'CHILD' tickets are requested without an 'ADULT'", () => {
         it("should throw purchase exception", (done) => {
             const request = [
-                new TicketTypeRequest(Constants.TicketType.CHILD, 1),
+                new TicketTypeRequest(Constants.TicketType.Child.Name, 1),
             ];
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
-                new InvalidPurchaseException(
-                    Constants.ExceptionMessages.NotEnoughAdults
-                )
+                new InvalidPurchaseException(ExceptionMessages.NotEnoughAdults)
             );
             done();
         });
@@ -96,14 +89,12 @@ describe("TicketService", () => {
     describe("when 'INFANT' tickets are requested without an 'ADULT'", () => {
         it("should throw purchase exception", (done) => {
             const request = [
-                new TicketTypeRequest(Constants.TicketType.INFANT, 1),
+                new TicketTypeRequest(Constants.TicketType.Infant.Name, 1),
             ];
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
-                new InvalidPurchaseException(
-                    Constants.ExceptionMessages.NotEnoughAdults
-                )
+                new InvalidPurchaseException(ExceptionMessages.NotEnoughAdults)
             );
             done();
         });
@@ -112,15 +103,13 @@ describe("TicketService", () => {
     describe("when more 'INFANT' tickets are requested than 'ADULTS'", () => {
         it("should throw purchase exception", (done) => {
             const request = [
-                new TicketTypeRequest(Constants.TicketType.ADULT, 2),
-                new TicketTypeRequest(Constants.TicketType.INFANT, 3),
+                new TicketTypeRequest(Constants.TicketType.Adult.Name, 2),
+                new TicketTypeRequest(Constants.TicketType.Infant.Name, 3),
             ];
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
-                new InvalidPurchaseException(
-                    Constants.ExceptionMessages.TooManyInfants
-                )
+                new InvalidPurchaseException(ExceptionMessages.TooManyInfants)
             );
             done();
         });
@@ -149,14 +138,14 @@ describe("TicketService", () => {
                 .spyOn(global.console, "error")
                 .mockImplementation();
             const request = [
-                new TicketTypeRequest(Constants.TicketType.ADULT, 2),
-                new TicketTypeRequest(Constants.TicketType.INFANT, 1),
+                new TicketTypeRequest(Constants.TicketType.Adult.Name, 2),
+                new TicketTypeRequest(Constants.TicketType.Infant.Name, 1),
             ];
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
                 new InvalidPurchaseException(
-                    Constants.ExceptionMessages.SeatAllocationError
+                    ExceptionMessages.SeatAllocationError
                 )
             );
             expect(consoleSpy).toHaveBeenCalledWith(new Error(mockErrorText));
@@ -186,15 +175,13 @@ describe("TicketService", () => {
                 .spyOn(global.console, "error")
                 .mockImplementation();
             const request = [
-                new TicketTypeRequest(Constants.TicketType.ADULT, 2),
-                new TicketTypeRequest(Constants.TicketType.INFANT, 1),
+                new TicketTypeRequest(Constants.TicketType.Adult.Name, 2),
+                new TicketTypeRequest(Constants.TicketType.Infant.Name, 1),
             ];
             const ticketPurchase = () =>
                 ticketService.purchaseTickets(accountId, request);
             expect(ticketPurchase).toThrow(
-                new InvalidPurchaseException(
-                    Constants.ExceptionMessages.PaymentError
-                )
+                new InvalidPurchaseException(ExceptionMessages.PaymentError)
             );
             expect(consoleSpy).toHaveBeenCalledWith(new Error(mockErrorText));
             done();
@@ -226,11 +213,10 @@ describe("TicketService", () => {
 
         it("should call the 'SeatReservationService' and 'TicketPaymentService' correct number of time with correct data", (done) => {
             const maxNumberOfSeats = Constants.MaxNumberOfTickets;
-            const adultTicketCost = new AdultTicketType().getCost();
-            const costOfTickets = adultTicketCost * maxNumberOfSeats;
+            const costOfTickets = 400;
             const request = [
                 new TicketTypeRequest(
-                    Constants.TicketType.ADULT,
+                    Constants.TicketType.Adult.Name,
                     maxNumberOfSeats
                 ),
             ];
@@ -274,14 +260,11 @@ describe("TicketService", () => {
 
         it("should call the 'SeatReservationService' and 'TicketPaymentService' correct number of time with correct data", (done) => {
             const maxNumberOfSeats = Constants.MaxNumberOfTickets;
-            const adultTicketCost = new AdultTicketType().getCost();
-            const childTicketCost = new ChildTicketType().getCost();
-            const costOfTickets =
-                adultTicketCost * 1 + childTicketCost * (maxNumberOfSeats - 1);
+            const costOfTickets = 210;
             const request = [
-                new TicketTypeRequest(Constants.TicketType.ADULT, 1),
+                new TicketTypeRequest(Constants.TicketType.Adult.Name, 1),
                 new TicketTypeRequest(
-                    Constants.TicketType.CHILD,
+                    Constants.TicketType.Child.Name,
                     maxNumberOfSeats - 1
                 ),
             ];
