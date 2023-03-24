@@ -30,6 +30,7 @@ export default class TicketTypeRequest {
 
         this.#setTicketTypeName(type);
         this.#setNoOfTickets(noOfTickets);
+        Object.freeze(this);
     }
 
     /**

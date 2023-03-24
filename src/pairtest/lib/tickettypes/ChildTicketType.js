@@ -7,5 +7,6 @@ export default class ChildTicketType extends BaseTicketType {
         this.setCost(Constants.TicketType.Child.Cost);
         this.setHasSeat(Constants.TicketType.Child.HasSeat);
         this.setTicketType(Constants.TicketType.Child.Name);
+        Object.freeze(this);
     }
 }

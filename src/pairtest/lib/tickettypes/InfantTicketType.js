@@ -8,5 +8,6 @@ export default class InfantTicketType extends BaseTicketType {
         this.setHasSeat(Constants.TicketType.Infant.HasSeat);
         this.setTicketType(Constants.TicketType.Infant.Name);
         // Infants do not pay for a ticket and are not allocated a seat. They will be sitting on an Adult's lap.
+        Object.freeze(this);
     }
 }
